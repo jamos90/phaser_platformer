@@ -1,28 +1,39 @@
+import Phaser from 'phaser';
+import PlayScene from './scenes/Play';
+import PreloadScene from './scenes/Preload';
 
-import Phaser from "phaser";
+//config passed to phase game object
+const WIDTH = 1280;
+const HEIGHT = 600
+
+const SHARED_CONFIG = {
+  width: WIDTH,
+  height: HEIGHT,
+}
+
+const scenes = [
+  PreloadScene,
+  PlayScene,
+]
+
+const createScene = scene => new scene(SHARED_CONFIG);
+
+const initScenes = () => scenes.map((scene) =>  createScene(scene));
+  
 
 const config = {
+  //type will be WebGl - web graphics lib, part of the browser - js api for rendering graphics
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
+  ...SHARED_CONFIG,
+  pixelArt: true,
   physics: {
+    //arcade physics plugin, manages physics simulations
     default: 'arcade',
     arcade: {
-      gravity: { y: 200 }
+      debug: false,
     }
   },
-  scene: {
-    preload: preload,
-    create: create
-  }
-};
+  scene: initScenes()
+}
 
 new Phaser.Game(config);
-
-function preload () {
-  this.load.image('sky', 'assets/sky.png');
-}
-
-function create () {
-  this.add.image(400, 300, 'sky');
-}
