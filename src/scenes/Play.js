@@ -9,31 +9,11 @@ class Play extends Phaser.Scene {
 
   create() {
     const map = this.createMap();
-
     const layers = this.createLayers(map);
+    const player = this.createPlayer();
 
-    this.player = this.createPlayer();
-
-    this.physics.add.collider(this.player, layers.platformColliders);
-
-    this.playerSpeed = 200;
-
-    //creates a reference to cursor keys on keyboard to be used in update
-    this.cursors = this.input.keyboard.createCursorKeys();
+    this.physics.add.collider(player, layers.platformColliders);
   }
-
-  update() {
-    const { left, right } = this.cursors;
-
-    if (left.isDown) {
-      this.player.setVelocityX(-this.playerSpeed);
-    } else if (right.isDown) {
-      this.player.setVelocityX(this.playerSpeed);
-    } else {
-      this.player.setVelocityX(0);
-    }
-  }
-
 
   createMap() {
     const map = this.make.tilemap({key: 'crystalWorld'});
@@ -57,7 +37,6 @@ class Play extends Phaser.Scene {
     //here we have add a custom property to call collides and set it to true for the blocks that make up the platform_colliders 
     platformColliders.setCollisionByProperty({collides: true});
 
-  
     return {
       environmentLayer,
       platformsLayer,
@@ -66,11 +45,8 @@ class Play extends Phaser.Scene {
   }
 
   createPlayer() {
-    // const player = this.physics.add.sprite(100, 250, 'player');
-    const player = new Player(this, 100, 250);
-    player.body.setGravityY(500);
-    player.setCollideWorldBounds(true);
-    return player;
+    return new Player(this, 100, 250);
+
   }
 }
 
