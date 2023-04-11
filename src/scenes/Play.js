@@ -11,7 +11,7 @@ class Play extends Phaser.Scene {
     const layers = this.createLayers(map);
     const player = this.createPlayer();
 
-    this.physics.add.collider(player, layers.platformsLayer);
+    this.physics.add.collider(player, layers.platformColliders);
   }
 
 
@@ -26,14 +26,22 @@ class Play extends Phaser.Scene {
     //first argument must match what the layer is called in tiled
     //order matters. Should match what you have in tiled
     const tileSet = map.getTileset('main_lev_build_1');
+    const platformColliders = map.createStaticLayer('platform_colliders', tileSet);
     const environmentLayer = map.createStaticLayer('environment', tileSet);
     const platformsLayer = map.createStaticLayer('platforms', tileSet);
-    platformsLayer.setCollisionByExclusion(-1, true);
+    //makes platforms collidable - -1 means that tiles that have an index larger than 0 will be collidable. 
+    //Ie tiles with level features. 
+    // platformColliders.setCollisionByExclusion(-1, true);
+    
+    //second way to add collison - using property name. You have to set special property in Titled for this to work. 
+    //here we have add a custom property to call collides and set it to true for the blocks that make up the platform_colliders 
+    platformColliders.setCollisionByProperty({collides: true});
 
   
     return {
       environmentLayer,
-      platformsLayer
+      platformsLayer,
+      platformColliders
     }
   }
 
